@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.7.RELEASE</version>
+	</parent>
+	<groupId>${groupId}</groupId>
+	<artifactId>${artifactId}</artifactId>
+	<version>${version}</version>
+	<name>${artifactId}</name>
+	<description>Database Driven Spring Boot Project (provided by tsl2spring)</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<basepackage>${package}</basepackage>
+		<port>${databasePort}</port>
+		<running.h2.path>${project.build.outputDirectory}/h2</running.h2.path>
+		<url>jdbc:h2:tcp://localhost:${port}/./${project.name};create=true;IFEXISTS=false</url>
+		<user>SA</user>
+		<sql.dir>${project.build.resources[0].directory}/db</sql.dir>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-ldap</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-rest</artifactId>
+		</dependency>
+		<!-- <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency> -->
+		<!-- <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency> -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+			<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-rest-hal-browser</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.193</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.projectreactor</groupId>
+			<artifactId>reactor-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+		<plugin>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>properties-maven-plugin</artifactId>
+			<version>1.0.0</version>
+			<executions>
+				<execution>
+				<phase>generate-resources</phase>
+				<goals>
+					<goal>write-project-properties</goal>
+				</goals>
+				<configuration>
+					<outputFile>${project.build.outputDirectory}/app.properties</outputFile>
+				</configuration>
+				</execution>
+			</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<!-- generate backend database and entities -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+	            <executions>
+	                <execution>
+	                    <id>start-h2</id>
+	                    <phase>generate-sources</phase>
+	                    <goals>
+	                        <goal>run</goal>
+	                    </goals>
+	                    <inherited>true</inherited>
+	                    <configuration>
+	                    	<failOnError>true</failOnError>
+							<!-- <skip>${skipTests}</skip> -->
+	                        <target>
+								<condition property="source-ddl-file" value="../${project.name}.sql" else="${sql.dir}/anyway.sql">
+									<available file="../${project.name}.sql" />
+								</condition>
+								<echo>copying source DDL 'source-ddl-file' file to project-folder</echo>
+								<copy file="${source-ddl-file}" tofile="${sql.dir}/create-${project.name}.sql" preservelastmodified="true" overwrite="true" />
+
+								<echo>run h2-database through antrun-plugin on ${url}</echo>
+								<property name="compile_classpath" value="${maven.compile.classpath}" />
+								<mkdir dir="${running.h2.path}" />
+								<java classname="org.h2.tools.Server" dir="${running.h2.path}" fork="true" spawn="true" clonevm="true">
+										<arg value="-baseDir" />
+										<arg value="${running.h2.path}" />
+										<arg value="-tcp" />
+										<arg value="-tcpPort" />
+										<arg value="${port}" />
+										<arg value="-tcpAllowOthers" />
+										<arg value="-trace" />
+										<!-- reference to the passed-in classpath reference -->
+										<classpath refid="maven.compile.classpath" />
+									</java>
+									<sleep seconds="1" />
+							</target>
+	                    </configuration>
+	                </execution>
+	            </executions>
+	        </plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.4.0</version>
+				<executions>
+					<execution>
+						<id>start-h2</id>
+						<phase>initialize_</phase><!-- deactivated in cause of not forking... -->
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<exec.async>true</exec.async>
+							<executable>java</executable>
+							<arguments>
+								<argument>-classpath</argument>
+								<classpath />
+								<argument>org.h2.tools.Server</argument>
+								<argument>-baseDir</argument>
+								<argument>./db</argument>
+								<argument>-tcp</argument>
+								<argument>-tcpPort</argument>
+								<argument>${port}</argument>
+								<argument>-tcpAllowOthers</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>stop-h2</id>
+						<phase>compile</phase> <!-- process-sources does not work for hbm2java/generate-sources... -->
+						<goals>
+							<goal>java</goal>
+						</goals>
+						<configuration>
+							<mainClass>org.h2.tools.Server</mainClass>
+							<arguments>
+								<argument>-tcpShutdown</argument>
+								<argument>tcp://localhost:${port}</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>sql-maven-plugin</artifactId>
+				<version>1.5</version>
+				<dependencies>
+					<dependency>
+						<groupId>com.h2database</groupId>
+						<artifactId>h2</artifactId>
+						<version>1.4.193</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<driver>org.h2.Driver</driver>
+					<url>${url}</url>
+					<username>${user}</username>
+					<password>${password}</password>
+					<autocommit>true</autocommit>
+					<skip>${maven.test.skip}</skip>
+					<onError>continue</onError>
+				</configuration>
+				<executions>
+					<execution>
+						<id>create-db</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<srcFiles>
+								<srcFile>${sql.dir}/create-user.sql</srcFile>
+								<srcFile>${sql.dir}/create-${project.name}.sql</srcFile>
+							</srcFiles>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>hibernate3-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<components>
+						<component>
+							<name>hbm2java</name>
+							<implementation>jdbcconfiguration</implementation>
+							<outputDirectory>${project.build.sourceDirectory}</outputDirectory>
+						</component>
+						<component>
+							<name>hbm2doc</name>
+							<implementation>jdbcconfiguration</implementation>
+							<outputDirectory>${sql.dir}/doc</outputDirectory>
+						</component>
+					</components>
+					<componentProperties>
+						<revengfile>${sql.dir}/hibernate-reveng.xml</revengfile>
+						<propertyfile>${sql.dir}/hibernate.properties</propertyfile>
+						<packagename>${basepackage}.beans</packagename>
+						<detectmanytomany>true</detectmanytomany>
+						<format>true</format>
+						<jdk5>true</jdk5>
+						<ejb3>true</ejb3>
+					</componentProperties>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>cglib</groupId>
+						<artifactId>cglib-nodep</artifactId>
+						<version>2.2.2</version>
+					</dependency>
+					<dependency>
+						<groupId>com.h2database</groupId>
+						<artifactId>h2</artifactId>
+						<version>1.4.193</version><!--Vorsicht: aktuellere Versionen sind momentan defekt! -->
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<id>generate-beans</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<!-- <goal>hbm2doc</goal> -->
+							<goal>hbm2java</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>net.sf.tsl2nano</groupId>
+				<artifactId>tsl2.nano.mavengenerator</artifactId>
+				<version>2.3.0-SNAPSHOT</version>
+				<inherited>true</inherited>
+				<executions>
+					<execution>
+						<id>generate-springdata-repositories</id>
+						<phase>process-classes</phase>
+						<goals><goal>run</goal></goals>
+						<configuration>
+							<outputPath>${project.build.sourceDirectory}</outputPath>
+							<templateFilePath>codegen/spring/repository.vm</templateFilePath>
+							<packageFilePath>${project.build.outputDirectory}/${basepackage}.beans</packageFilePath>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-springdata-controller</id>
+						<phase>process-classes</phase>
+						<goals><goal>run</goal></goals>
+						<configuration>
+							<outputPath>${project.build.sourceDirectory}</outputPath>
+							<templateFilePath>codegen/spring/controller.vm</templateFilePath>
+							<packageFilePath>${project.build.outputDirectory}/${basepackage}.beans</packageFilePath>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-springdata-index</id>
+						<phase>process-classes</phase>
+						<goals><goal>run</goal></goals>
+						<configuration>
+							<outputPath>${project.build.resources[0].directory}/templates</outputPath>
+							<destinationPrefix></destinationPrefix>
+							<destinationPostfix>index.html</destinationPostfix>
+							<templateFilePath>codegen/spring/index.vm</templateFilePath>
+							<packageFilePath>${project.build.outputDirectory}/${basepackage}.beans</packageFilePath>
+							<unpackaged>true</unpackaged>
+							<singleFile>true</singleFile>
+							<!-- <propertyFile>src/main/resources/application.properties</propertyFile> -->
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-springdata-thymeleaflist</id>
+						<phase>process-classes</phase>
+						<goals><goal>run</goal></goals>
+						<configuration>
+							<outputPath>${project.build.resources[0].directory}/templates</outputPath>
+							<destinationPostfix>CView.html</destinationPostfix>
+							<templateFilePath>codegen/spring/containerview.vm</templateFilePath>
+							<packageFilePath>${project.build.outputDirectory}/${basepackage}.beans</packageFilePath>
+							<unpackaged>true</unpackaged>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-springdata-thymeleaf</id>
+						<phase>process-classes</phase>
+						<goals><goal>run</goal></goals>
+						<configuration>
+							<outputPath>${project.build.resources[0].directory}/templates</outputPath>
+							<destinationPostfix>View.html</destinationPostfix>
+							<templateFilePath>codegen/spring/view.vm</templateFilePath>
+							<packageFilePath>${project.build.outputDirectory}/${basepackage}.beans</packageFilePath>
+							<unpackaged>true</unpackaged>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

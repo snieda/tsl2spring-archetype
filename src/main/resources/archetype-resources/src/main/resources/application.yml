@@ -1,0 +1,14 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+
+spring:
+  data:
+    rest:
+      basePath=/api
+  security:
+    user:
+        name: ${artifactId}
+        password: ${artifactId}
+server:
+  port=${applicationPort}
