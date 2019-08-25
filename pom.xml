@@ -2,12 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>tsl2.spring</groupId>
-  <artifactId>mda-archetype</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <groupId>net.sf.tsl2nano</groupId>
+  <artifactId>mda-spring-archetype</artifactId>
+  <version>0.0.1</version>
   <packaging>maven-archetype</packaging>
 
-  <name>tsl2.spring.mda-archetype</name>
+  <name>TSL2 MDA Spring Archetype</name>
   <description>TSL2 Archetype for MDA with spring-boot</description>
   <build>
     <extensions>
@@ -28,6 +28,16 @@
     </pluginManagement>
   </build>
 
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
 
   <url>https://github.com/snieda/mda-archetype.git</url>
 
@@ -48,6 +58,7 @@
 
   <scm>
     <url>hhttps://github.com/snieda/mda-archetype.git</url>
+    <developerConnection>hhttps://github.com/snieda/mda-archetype.git</developerConnection>
   </scm>
 </project>
 
