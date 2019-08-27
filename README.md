@@ -27,7 +27,7 @@ TODOs:
 	* thymeleaf-layouts / css-styling
 	* login mask
 	* spring security/oauth
-	* rule engine
+	* rule engine: spring-rules?, drools
 	* jpa namequery with repository, controller + view (generate by annotation)
 	* websocket + ajax for validation, selection-options, quick-searches
 
