@@ -313,8 +313,8 @@
 						<goals><goal>run</goal></goals>
 						<configuration>
 							<outputPath>${project.build.sourceDirectory}</outputPath>
-							<templateFilePath>codegen/spring/repository.vm</templateFilePath>
-							<packageFilePath>${project.build.outputDirectory}/${basepackage}.beans</packageFilePath>
+							<template>codegen/spring/repository.vm</template>
+							<model>${project.build.outputDirectory}/${basepackage}.beans</model>
 						</configuration>
 					</execution>
 					<execution>
@@ -323,8 +323,8 @@
 						<goals><goal>run</goal></goals>
 						<configuration>
 							<outputPath>${project.build.sourceDirectory}</outputPath>
-							<templateFilePath>codegen/spring/controller.vm</templateFilePath>
-							<packageFilePath>${project.build.outputDirectory}/${basepackage}.beans</packageFilePath>
+							<template>codegen/spring/controller.vm</template>
+							<model>${project.build.outputDirectory}/${basepackage}.beans</model>
 						</configuration>
 					</execution>
 					<execution>
@@ -335,8 +335,8 @@
 							<outputPath>${project.build.resources[0].directory}/templates</outputPath>
 							<destinationPrefix></destinationPrefix>
 							<destinationPostfix>index.html</destinationPostfix>
-							<templateFilePath>codegen/spring/index.vm</templateFilePath>
-							<packageFilePath>${project.build.outputDirectory}/${basepackage}.beans</packageFilePath>
+							<template>codegen/spring/index.vm</template>
+							<model>${project.build.outputDirectory}/${basepackage}.beans</model>
 							<unpackaged>true</unpackaged>
 							<singleFile>true</singleFile>
 							<!-- <propertyFile>src/main/resources/application.properties</propertyFile> -->
@@ -349,8 +349,8 @@
 						<configuration>
 							<outputPath>${project.build.resources[0].directory}/templates</outputPath>
 							<destinationPostfix>CView.html</destinationPostfix>
-							<templateFilePath>codegen/spring/containerview.vm</templateFilePath>
-							<packageFilePath>${project.build.outputDirectory}/${basepackage}.beans</packageFilePath>
+							<template>codegen/spring/containerview.vm</template>
+							<model>${project.build.outputDirectory}/${basepackage}.beans</model>
 							<unpackaged>true</unpackaged>
 						</configuration>
 					</execution>
@@ -361,8 +361,8 @@
 						<configuration>
 							<outputPath>${project.build.resources[0].directory}/templates</outputPath>
 							<destinationPostfix>View.html</destinationPostfix>
-							<templateFilePath>codegen/spring/view.vm</templateFilePath>
-							<packageFilePath>${project.build.outputDirectory}/${basepackage}.beans</packageFilePath>
+							<template>codegen/spring/view.vm</template>
+							<model>${project.build.outputDirectory}/${basepackage}.beans</model>
 							<unpackaged>true</unpackaged>
 						</configuration>
 					</execution>
