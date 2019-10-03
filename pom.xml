@@ -4,12 +4,18 @@
 
   <groupId>net.sf.tsl2nano</groupId>
   <artifactId>mda-spring-archetype</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.2</version>
   <packaging>maven-archetype</packaging>
 
   <name>TSL2 MDA Spring Archetype</name>
   <description>TSL2 Archetype for MDA with spring-boot</description>
   <build>
+  <resources>
+    <resource>
+      <directory>src/main/resources</directory>
+      <filtering>false</filtering>
+    </resource>
+	</resources>
     <extensions>
       <extension>
         <groupId>org.apache.maven.archetype</groupId>
@@ -72,7 +78,7 @@
     </repository>
   </distributionManagement>
 
-  <url>https://github.com/snieda/mda-archetype.git</url>
+  <url>https://github.com/snieda/tsl2spring-archetype.git</url>
 
   <developers>
     <developer>
@@ -90,8 +96,8 @@
   </licenses>
 
   <scm>
-    <url>hhttps://github.com/snieda/mda-archetype.git</url>
-    <developerConnection>hhttps://github.com/snieda/mda-archetype.git</developerConnection>
+    <url>https://github.com/snieda/tsl2spring-archetype.git</url>
+    <developerConnection>https://github.com/snieda/tsl2spring-archetype.git</developerConnection>
   </scm>
 </project>
 
