@@ -9,6 +9,9 @@
     <requiredProperty key="classPrefix">
       <defaultValue>${artifactId.substring(0, 1).toUpperCase()}${artifactId.substring(1)}</defaultValue>
     </requiredProperty>
+    <requiredProperty key="idType">
+      <defaultValue>java.lang.Long</defaultValue>
+    </requiredProperty>
     <requiredProperty key="databasePort">
       <defaultValue>9092</defaultValue>
     </requiredProperty>

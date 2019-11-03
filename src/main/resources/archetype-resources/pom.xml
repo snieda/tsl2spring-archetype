@@ -19,6 +19,7 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<basepackage>${package}</basepackage>
+		<idType>${idType}</idType>
 		<port>${databasePort}</port>
 		<running.h2.path>${project.build.outputDirectory}/h2</running.h2.path>
 		<url>jdbc:h2:tcp://localhost:${port}/./${project.name};create=true;IFEXISTS=false</url>
@@ -304,7 +305,7 @@
 			<plugin>
 				<groupId>net.sf.tsl2nano</groupId>
 				<artifactId>tsl2.nano.mavengenerator</artifactId>
-				<version>2.3.0-SNAPSHOT</version>
+				<version>2.3.1-SNAPSHOT</version>
 				<inherited>true</inherited>
 				<executions>
 					<execution>
