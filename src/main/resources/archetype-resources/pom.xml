@@ -78,7 +78,7 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>1.4.193</version>
+			<version>2.1.210</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -224,7 +224,7 @@
 					<dependency>
 						<groupId>com.h2database</groupId>
 						<artifactId>h2</artifactId>
-						<version>1.4.193</version>
+						<version>2.1.210</version>
 					</dependency>
 				</dependencies>
 				<configuration>
@@ -288,7 +288,7 @@
 					<dependency>
 						<groupId>com.h2database</groupId>
 						<artifactId>h2</artifactId>
-						<version>1.4.193</version><!--Vorsicht: aktuellere Versionen sind momentan defekt! -->
+						<version>2.1.210</version><!--Vorsicht: aktuellere Versionen sind momentan defekt! -->
 					</dependency>
 				</dependencies>
 				<executions>
